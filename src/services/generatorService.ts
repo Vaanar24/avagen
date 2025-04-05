@@ -1,6 +1,7 @@
 
 import { toast } from '@/components/ui/use-toast';
 import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/integrations/supabase/types";
 
 interface Avatar {
   id: string;
@@ -115,6 +116,7 @@ export const generateAvatar = async ({ prompt, userId }: GenerateParams): Promis
     }
     
     // User is authenticated, store in Supabase
+    // Use type casting to help TypeScript understand the table structure
     const { data: insertedAvatar, error } = await supabase
       .from('avatars')
       .insert({
@@ -129,6 +131,10 @@ export const generateAvatar = async ({ prompt, userId }: GenerateParams): Promis
     if (error) {
       console.error('Error storing avatar in Supabase:', error);
       throw error;
+    }
+    
+    if (!insertedAvatar) {
+      throw new Error('Failed to insert avatar: No data returned');
     }
     
     // Map the database object to our Avatar interface
@@ -171,6 +177,10 @@ export const getAvatar = async (avatarId: string): Promise<Avatar | undefined> =
       return undefined;
     }
     
+    if (!avatarData) {
+      return undefined;
+    }
+    
     // Map the database object to our Avatar interface
     return {
       id: avatarData.id,
@@ -204,6 +214,10 @@ export const getUserAvatars = async (userId: string): Promise<Avatar[]> => {
         .sort((a: Avatar, b: Avatar) => 
           new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
         );
+    }
+    
+    if (!supabaseAvatars) {
+      return [];
     }
     
     // Map the database objects to our Avatar interface
