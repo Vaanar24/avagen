@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -10,12 +10,45 @@ import Navbar from '@/components/NavBar';
 import { generateAvatar, getUserAvatars } from '@/services/generatorService';
 import { toast } from '@/components/ui/use-toast';
 
+interface Avatar {
+  id: string;
+  userId: string;
+  prompt: string;
+  imageUrl: string;
+  timestamp: string;
+  generationTime: number;
+}
+
 const Generator = () => {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [recentAvatars, setRecentAvatars] = useState<Avatar[]>([]);
+  const [isLoadingAvatars, setIsLoadingAvatars] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
-  const userAvatars = user ? getUserAvatars(user.id).slice(0, 4) : [];
+
+  useEffect(() => {
+    async function fetchUserAvatars() {
+      if (user) {
+        setIsLoadingAvatars(true);
+        try {
+          const avatars = await getUserAvatars(user.id);
+          setRecentAvatars(avatars.slice(0, 4));
+        } catch (error) {
+          console.error('Failed to load avatars:', error);
+          toast({
+            title: "Failed to load avatars",
+            description: "There was a problem loading your recent avatars.",
+            variant: "destructive",
+          });
+        } finally {
+          setIsLoadingAvatars(false);
+        }
+      }
+    }
+    
+    fetchUserAvatars();
+  }, [user]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,6 +71,9 @@ const Generator = () => {
         title: "Avatar created",
         description: "Your new avatar is ready!",
       });
+      
+      // Update the recent avatars list with the new avatar
+      setRecentAvatars(prev => [result, ...prev].slice(0, 4));
       
       navigate(`/result/${result.id}`);
     } catch (error) {
@@ -118,11 +154,15 @@ const Generator = () => {
             </CardContent>
           </Card>
           
-          {userAvatars.length > 0 && (
+          {isLoadingAvatars ? (
+            <div className="flex justify-center my-12">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : recentAvatars.length > 0 ? (
             <div className="mt-12">
               <h2 className="text-2xl font-semibold mb-6">Your Recent Avatars</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {userAvatars.map((avatar) => (
+                {recentAvatars.map((avatar) => (
                   <div 
                     key={avatar.id} 
                     className="aspect-square rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-all hover:scale-105"
@@ -137,7 +177,7 @@ const Generator = () => {
                 ))}
               </div>
             </div>
-          )}
+          ) : null}
         </div>
       </main>
     </div>

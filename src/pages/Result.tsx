@@ -10,6 +10,7 @@ import { toast } from '@/components/ui/use-toast';
 
 interface Avatar {
   id: string;
+  userId: string;
   prompt: string;
   imageUrl: string;
   timestamp: string;
@@ -23,25 +24,41 @@ const Result = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!imageId) {
-      navigate('/generator');
-      return;
-    }
+    async function fetchAvatar() {
+      if (!imageId) {
+        navigate('/generator');
+        return;
+      }
 
-    const fetchedAvatar = getAvatar(imageId);
-    
-    if (!fetchedAvatar) {
-      toast({
-        title: "Avatar not found",
-        description: "The requested avatar could not be found",
-        variant: "destructive",
-      });
-      navigate('/generator');
-      return;
+      setIsLoading(true);
+      try {
+        const fetchedAvatar = await getAvatar(imageId);
+        
+        if (!fetchedAvatar) {
+          toast({
+            title: "Avatar not found",
+            description: "The requested avatar could not be found",
+            variant: "destructive",
+          });
+          navigate('/generator');
+          return;
+        }
+        
+        setAvatar(fetchedAvatar);
+      } catch (error) {
+        console.error('Error fetching avatar:', error);
+        toast({
+          title: "Error loading avatar",
+          description: "There was a problem loading the avatar",
+          variant: "destructive",
+        });
+        navigate('/generator');
+      } finally {
+        setIsLoading(false);
+      }
     }
     
-    setAvatar(fetchedAvatar);
-    setIsLoading(false);
+    fetchAvatar();
   }, [imageId, navigate]);
 
   const handleDownload = () => {

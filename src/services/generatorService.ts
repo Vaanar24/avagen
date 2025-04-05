@@ -1,9 +1,10 @@
 
 import { toast } from '@/components/ui/use-toast';
+import { supabase } from "@/integrations/supabase/client";
 
 interface Avatar {
   id: string;
-  userId: number;
+  userId: string;
   prompt: string;
   imageUrl: string;
   timestamp: string;
@@ -12,7 +13,7 @@ interface Avatar {
 
 interface GenerateParams {
   prompt: string;
-  userId: number;
+  userId: string;
 }
 
 const PLACEHOLDER_IMAGES = [
@@ -88,20 +89,57 @@ export const generateAvatar = async ({ prompt, userId }: GenerateParams): Promis
     const endTime = new Date().getTime();
     const generationTime = (endTime - startTime) / 1000;
     
-    // Create a new avatar object
-    const newAvatar: Avatar = {
-      id: `img_${Date.now()}`,
-      userId,
-      prompt,
-      imageUrl,
-      timestamp: new Date().toISOString(),
-      generationTime,
-    };
+    // Get the session to verify user is logged in
+    const { data: sessionData } = await supabase.auth.getSession();
     
-    // Store in localStorage for persistence
-    const existingAvatars = JSON.parse(localStorage.getItem('generatedAvatars') || '[]');
-    existingAvatars.push(newAvatar);
-    localStorage.setItem('generatedAvatars', JSON.stringify(existingAvatars));
+    if (!sessionData.session) {
+      // If not logged in, use localStorage as fallback
+      console.warn("User not authenticated, using localStorage fallback");
+      
+      // Create a new avatar object
+      const newAvatar: Avatar = {
+        id: `img_${Date.now()}`,
+        userId,
+        prompt,
+        imageUrl,
+        timestamp: new Date().toISOString(),
+        generationTime,
+      };
+      
+      // Store in localStorage for persistence
+      const existingAvatars = JSON.parse(localStorage.getItem('generatedAvatars') || '[]');
+      existingAvatars.push(newAvatar);
+      localStorage.setItem('generatedAvatars', JSON.stringify(existingAvatars));
+      
+      return newAvatar;
+    }
+    
+    // User is authenticated, store in Supabase
+    const { data: insertedAvatar, error } = await supabase
+      .from('avatars')
+      .insert({
+        prompt,
+        image_url: imageUrl,
+        generation_time: generationTime,
+        user_id: userId
+      })
+      .select('*')
+      .single();
+    
+    if (error) {
+      console.error('Error storing avatar in Supabase:', error);
+      throw error;
+    }
+    
+    // Map the database object to our Avatar interface
+    const newAvatar: Avatar = {
+      id: insertedAvatar.id,
+      userId: insertedAvatar.user_id,
+      prompt: insertedAvatar.prompt,
+      imageUrl: insertedAvatar.image_url,
+      timestamp: insertedAvatar.timestamp,
+      generationTime: insertedAvatar.generation_time,
+    };
     
     return newAvatar;
   } catch (error) {
@@ -115,24 +153,68 @@ export const generateAvatar = async ({ prompt, userId }: GenerateParams): Promis
   }
 };
 
-export const getAvatar = (avatarId: string): Avatar | undefined => {
+export const getAvatar = async (avatarId: string): Promise<Avatar | undefined> => {
   try {
-    const avatars = JSON.parse(localStorage.getItem('generatedAvatars') || '[]');
-    return avatars.find((avatar: Avatar) => avatar.id === avatarId);
+    // Try from Supabase first
+    const { data: avatarData, error } = await supabase
+      .from('avatars')
+      .select('*')
+      .eq('id', avatarId)
+      .single();
+    
+    if (error) {
+      // If not found in Supabase, try localStorage
+      const avatars = JSON.parse(localStorage.getItem('generatedAvatars') || '[]');
+      const localAvatar = avatars.find((avatar: Avatar) => avatar.id === avatarId);
+      
+      if (localAvatar) return localAvatar;
+      return undefined;
+    }
+    
+    // Map the database object to our Avatar interface
+    return {
+      id: avatarData.id,
+      userId: avatarData.user_id,
+      prompt: avatarData.prompt,
+      imageUrl: avatarData.image_url,
+      timestamp: avatarData.timestamp,
+      generationTime: avatarData.generation_time,
+    };
   } catch (error) {
     console.error('Error fetching avatar:', error);
     return undefined;
   }
 };
 
-export const getUserAvatars = (userId: number): Avatar[] => {
+export const getUserAvatars = async (userId: string): Promise<Avatar[]> => {
   try {
-    const avatars = JSON.parse(localStorage.getItem('generatedAvatars') || '[]');
-    return avatars
-      .filter((avatar: Avatar) => avatar.userId === userId)
-      .sort((a: Avatar, b: Avatar) => 
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      );
+    // Try from Supabase first
+    const { data: supabaseAvatars, error } = await supabase
+      .from('avatars')
+      .select('*')
+      .eq('user_id', userId)
+      .order('timestamp', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching from Supabase, falling back to localStorage:', error);
+      // Fallback to localStorage
+      const avatars = JSON.parse(localStorage.getItem('generatedAvatars') || '[]');
+      return avatars
+        .filter((avatar: Avatar) => avatar.userId === userId)
+        .sort((a: Avatar, b: Avatar) => 
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        );
+    }
+    
+    // Map the database objects to our Avatar interface
+    return supabaseAvatars.map(avatar => ({
+      id: avatar.id,
+      userId: avatar.user_id,
+      prompt: avatar.prompt,
+      imageUrl: avatar.image_url,
+      timestamp: avatar.timestamp,
+      generationTime: avatar.generation_time,
+    }));
   } catch (error) {
     console.error('Error fetching user avatars:', error);
     return [];

@@ -10,7 +10,7 @@ import { Loader2, UserPlus } from 'lucide-react';
 import Navbar from '@/components/NavBar';
 
 const Signup = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -44,7 +44,7 @@ const Signup = () => {
     setIsLoading(true);
     
     try {
-      const success = await signup(username, password);
+      const success = await signup(email, password);
       if (success) {
         navigate('/login');
       }
@@ -68,13 +68,13 @@ const Signup = () => {
             <form onSubmit={handleSubmit}>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="username">Username</Label>
+                  <Label htmlFor="email">Email</Label>
                   <Input
-                    id="username"
-                    type="text"
-                    placeholder="Choose a username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                     className="bg-white/50"
                   />
