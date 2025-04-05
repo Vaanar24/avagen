@@ -1,6 +1,6 @@
 
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,20 +8,37 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Label } from '@/components/ui/label';
 import { Loader2, LogIn } from 'lucide-react';
 import Navbar from '@/components/NavBar';
+import { toast } from '@/components/ui/use-toast';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Check for email confirmation success message in URL
+    const searchParams = new URLSearchParams(location.search);
+    const confirmationStatus = searchParams.get('confirmation');
+    
+    if (confirmationStatus === 'success') {
+      toast({
+        title: "Email confirmed",
+        description: "Your email has been confirmed successfully! You can now log in.",
+      });
+      // Clean up URL parameters
+      navigate('/login', { replace: true });
+    }
+  }, [location, navigate]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
-      const success = await login(username, password);
+      const success = await login(email, password);
       if (success) {
         navigate('/generator');
       }
@@ -45,13 +62,13 @@ const Login = () => {
             <form onSubmit={handleSubmit}>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="username">Username</Label>
+                  <Label htmlFor="email">Email</Label>
                   <Input
-                    id="username"
-                    type="text"
-                    placeholder="Enter your username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                     className="bg-white/50"
                   />

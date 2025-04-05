@@ -30,6 +30,52 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    // Check URL for access_token and refresh_token (from email confirmation)
+    const handleEmailConfirmation = async () => {
+      const url = new URL(window.location.href);
+      const accessToken = url.searchParams.get('access_token');
+      const refreshToken = url.searchParams.get('refresh_token');
+      const errorCode = url.searchParams.get('error_code');
+      const error = url.searchParams.get('error_description');
+
+      if (errorCode || error) {
+        console.error('Email confirmation error:', error);
+        toast({
+          title: "Confirmation error",
+          description: error || "There was an error confirming your email",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (accessToken && refreshToken) {
+        const { data, error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+        
+        if (error) {
+          console.error('Error setting session:', error);
+          toast({
+            title: "Authentication error",
+            description: error.message,
+            variant: "destructive",
+          });
+        } else if (data.session) {
+          setSession(data.session);
+          setUser(data.session.user);
+          toast({
+            title: "Email confirmed",
+            description: "Your email has been confirmed successfully!",
+          });
+          // Clean up URL parameters
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
+    };
+
+    handleEmailConfirmation();
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log('Auth state changed:', event);
@@ -45,6 +91,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         toast({
           title: "Logged out",
           description: "You have been logged out successfully",
+        });
+      } else if (event === 'USER_UPDATED') {
+        toast({
+          title: "Account updated",
+          description: "Your account has been updated successfully",
         });
       }
     });
@@ -93,9 +144,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signup = async (email: string, password: string): Promise<boolean> => {
     try {
+      // Use redirectTo to specify where users should be sent after clicking the confirmation link
       const { error } = await supabase.auth.signUp({
         email,
-        password
+        password,
+        options: {
+          emailRedirectTo: window.location.origin + '/login', // Redirect to login page after confirmation
+        }
       });
       
       if (error) {
