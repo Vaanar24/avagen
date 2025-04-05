@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Loader2, Sparkles } from 'lucide-react';
 import Navbar from '@/components/NavBar';
 import { generateAvatar, getUserAvatars } from '@/services/generatorService';
+import { toast } from '@/components/ui/use-toast';
 
 const Generator = () => {
   const [prompt, setPrompt] = useState('');
@@ -22,6 +23,10 @@ const Generator = () => {
     if (!prompt.trim() || !user) return;
     
     setIsGenerating(true);
+    toast({
+      title: "Processing prompt",
+      description: "Creating your custom avatar...",
+    });
     
     try {
       const result = await generateAvatar({
@@ -29,9 +34,19 @@ const Generator = () => {
         userId: user.id,
       });
       
+      toast({
+        title: "Avatar created",
+        description: "Your new avatar is ready!",
+      });
+      
       navigate(`/result/${result.id}`);
     } catch (error) {
       console.error('Generation error:', error);
+      toast({
+        title: "Generation failed",
+        description: "There was a problem creating your avatar. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsGenerating(false);
     }
@@ -89,7 +104,7 @@ const Generator = () => {
                         </div>
                       </div>
                       <p className="text-muted-foreground text-lg">Creating your avatar...</p>
-                      <p className="text-sm text-muted-foreground mt-1">This may take a few moments</p>
+                      <p className="text-sm text-muted-foreground mt-1">This may take up to 15 seconds</p>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">

@@ -23,22 +23,70 @@ const PLACEHOLDER_IMAGES = [
   'https://via.placeholder.com/512x512/8B5CF6/FFFFFF?text=AI+Avatar+5',
 ];
 
-// In a real app, this would connect to an actual AI service
+// Hugging Face API constants
+const HF_API_URL = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell";
+const HF_TOKEN = "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";
+
 export const generateAvatar = async ({ prompt, userId }: GenerateParams): Promise<Avatar> => {
   try {
-    // Simulate API call delay
+    // Start timing the generation process
     const startTime = new Date().getTime();
     
-    // Simulate processing time (2-4 seconds)
-    const processingTime = 2000 + Math.random() * 2000;
-    await new Promise(resolve => setTimeout(resolve, processingTime));
+    // Enhance prompt for better results
+    const enhancedPrompt = `${prompt}, animated, high quality, detailed`;
+    
+    // Call Hugging Face API for real image generation
+    let imageUrl = '';
+    
+    try {
+      toast({
+        title: "Generating avatar",
+        description: "This may take a few moments...",
+      });
+      
+      // Call the Hugging Face API
+      const response = await fetch(HF_API_URL, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${HF_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          inputs: enhancedPrompt,
+          parameters: {
+            width: 1024,
+            height: 1024,
+            num_inference_steps: 4,
+            guidance_scale: 7
+          }
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('HF API error:', response.status, response.statusText);
+        throw new Error(`API call failed with status: ${response.status}`);
+      }
+      
+      // The response is a binary blob (the image)
+      const blob = await response.blob();
+      imageUrl = URL.createObjectURL(blob);
+      
+    } catch (apiError) {
+      console.error('Error calling HF API:', apiError);
+      
+      // Fallback to placeholder images if API fails
+      const randomIndex = Math.floor(Math.random() * PLACEHOLDER_IMAGES.length);
+      imageUrl = PLACEHOLDER_IMAGES[randomIndex];
+      
+      toast({
+        title: "API error",
+        description: "Using placeholder image instead. Please try again later.",
+        variant: "destructive",
+      });
+    }
     
     const endTime = new Date().getTime();
     const generationTime = (endTime - startTime) / 1000;
-    
-    // Randomly select a placeholder image
-    const randomIndex = Math.floor(Math.random() * PLACEHOLDER_IMAGES.length);
-    const imageUrl = PLACEHOLDER_IMAGES[randomIndex];
     
     // Create a new avatar object
     const newAvatar: Avatar = {
