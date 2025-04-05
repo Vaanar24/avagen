@@ -27,26 +27,27 @@ const Generator = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function fetchUserAvatars() {
-      if (user) {
-        setIsLoadingAvatars(true);
-        try {
-          const avatars = await getUserAvatars(user.id);
-          setRecentAvatars(avatars.slice(0, 4));
-        } catch (error) {
-          console.error('Failed to load avatars:', error);
-          toast({
-            title: "Failed to load avatars",
-            description: "There was a problem loading your recent avatars.",
-            variant: "destructive",
-          });
-        } finally {
-          setIsLoadingAvatars(false);
-        }
+  // Function to load avatars
+  const fetchUserAvatars = async () => {
+    if (user) {
+      setIsLoadingAvatars(true);
+      try {
+        const avatars = await getUserAvatars(user.id);
+        setRecentAvatars(avatars.slice(0, 4));
+      } catch (error) {
+        console.error('Failed to load avatars:', error);
+        toast({
+          title: "Failed to load avatars",
+          description: "There was a problem loading your recent avatars.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoadingAvatars(false);
       }
     }
-    
+  };
+
+  useEffect(() => {
     fetchUserAvatars();
   }, [user]);
 
@@ -73,7 +74,7 @@ const Generator = () => {
       });
       
       // Update the recent avatars list with the new avatar
-      setRecentAvatars(prev => [result, ...prev].slice(0, 4));
+      await fetchUserAvatars(); // Refresh avatars from database
       
       navigate(`/result/${result.id}`);
     } catch (error) {

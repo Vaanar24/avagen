@@ -69,9 +69,18 @@ export const generateAvatar = async ({ prompt, userId }: GenerateParams): Promis
         throw new Error(`API call failed with status: ${response.status}`);
       }
       
-      // The response is a binary blob (the image)
+      // Convert the blob to base64 string for persistent storage
       const blob = await response.blob();
-      imageUrl = URL.createObjectURL(blob);
+      const reader = new FileReader();
+      
+      // Convert blob to data URL using a promise
+      const base64Image = await new Promise<string>((resolve) => {
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
+      
+      // Use the base64 data URL as the image URL
+      imageUrl = base64Image;
       
     } catch (apiError) {
       console.error('Error calling HF API:', apiError);
@@ -116,7 +125,6 @@ export const generateAvatar = async ({ prompt, userId }: GenerateParams): Promis
     }
     
     // User is authenticated, store in Supabase
-    // Use type casting to help TypeScript understand the table structure
     const { data: insertedAvatar, error } = await supabase
       .from('avatars')
       .insert({
@@ -124,7 +132,7 @@ export const generateAvatar = async ({ prompt, userId }: GenerateParams): Promis
         image_url: imageUrl,
         generation_time: generationTime,
         user_id: userId
-      })
+      } as Database['public']['Tables']['avatars']['Insert'])
       .select('*')
       .single();
     
@@ -144,7 +152,7 @@ export const generateAvatar = async ({ prompt, userId }: GenerateParams): Promis
       prompt: insertedAvatar.prompt,
       imageUrl: insertedAvatar.image_url,
       timestamp: insertedAvatar.timestamp,
-      generationTime: insertedAvatar.generation_time,
+      generationTime: insertedAvatar.generation_time || 0,
     };
     
     return newAvatar;
@@ -188,7 +196,7 @@ export const getAvatar = async (avatarId: string): Promise<Avatar | undefined> =
       prompt: avatarData.prompt,
       imageUrl: avatarData.image_url,
       timestamp: avatarData.timestamp,
-      generationTime: avatarData.generation_time,
+      generationTime: avatarData.generation_time || 0,
     };
   } catch (error) {
     console.error('Error fetching avatar:', error);
@@ -227,7 +235,7 @@ export const getUserAvatars = async (userId: string): Promise<Avatar[]> => {
       prompt: avatar.prompt,
       imageUrl: avatar.image_url,
       timestamp: avatar.timestamp,
-      generationTime: avatar.generation_time,
+      generationTime: avatar.generation_time || 0,
     }));
   } catch (error) {
     console.error('Error fetching user avatars:', error);
