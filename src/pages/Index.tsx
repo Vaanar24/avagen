@@ -1,12 +1,107 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import Navbar from '@/components/NavBar';
+import { Image, User, Sparkles, Zap } from 'lucide-react';
 
 const Index = () => {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      
+      <main className="flex-1 pt-24">
+        {/* Hero Section */}
+        <section className="container mx-auto px-4 pt-8 pb-20 md:pt-16 md:pb-32 flex flex-col items-center text-center">
+          <div className="relative mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-avatar-purple to-avatar-blue bg-clip-text text-transparent mb-2">
+              Avatar Dream Weaver
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl">
+              Create stunning AI-generated avatars with simple text prompts
+            </p>
+            <div className="absolute -z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-32 bg-gradient-to-r from-avatar-purple/20 to-avatar-blue/20 blur-3xl rounded-full"></div>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 my-12 max-w-4xl w-full">
+            {[1, 2, 3, 4].map((item) => (
+              <div 
+                key={item} 
+                className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-gradient-to-br from-avatar-purple/80 to-avatar-blue/80"
+              >
+                <img 
+                  src={`https://via.placeholder.com/300x300/8B5CF6/FFFFFF?text=Example+${item}`} 
+                  alt={`Avatar example ${item}`}
+                  className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+                />
+              </div>
+            ))}
+          </div>
+          
+          <div className="space-x-4">
+            {isAuthenticated ? (
+              <Link to="/generator">
+                <Button size="lg" className="gap-2 text-lg px-8 py-6 bg-gradient-to-r from-avatar-purple to-avatar-blue hover:opacity-90 transition-opacity">
+                  <Sparkles className="w-5 h-5" />
+                  Generate Avatar
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link to="/signup">
+                  <Button size="lg" className="gap-2 text-lg px-8 py-6 bg-gradient-to-r from-avatar-purple to-avatar-blue hover:opacity-90 transition-opacity">
+                    <User className="w-5 h-5" />
+                    Get Started
+                  </Button>
+                </Link>
+                <Link to="/login">
+                  <Button size="lg" variant="outline" className="gap-2 text-lg px-8 py-6">
+                    Login
+                  </Button>
+                </Link>
+              </>
+            )}
+          </div>
+        </section>
+        
+        {/* Features Section */}
+        <section className="bg-gradient-to-b from-background to-secondary/30 py-20">
+          <div className="container mx-auto px-4 grid md:grid-cols-3 gap-8">
+            <div className="glass rounded-2xl p-8 flex flex-col items-center text-center transition-transform hover:scale-105 duration-300">
+              <div className="w-16 h-16 rounded-full bg-avatar-purple/20 flex items-center justify-center mb-4">
+                <Zap className="w-8 h-8 text-avatar-purple" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Fast Generation</h3>
+              <p className="text-muted-foreground">Create beautiful avatars in seconds with our lightning fast AI model</p>
+            </div>
+            
+            <div className="glass rounded-2xl p-8 flex flex-col items-center text-center transition-transform hover:scale-105 duration-300">
+              <div className="w-16 h-16 rounded-full bg-avatar-indigo/20 flex items-center justify-center mb-4">
+                <Sparkles className="w-8 h-8 text-avatar-indigo" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Creative Control</h3>
+              <p className="text-muted-foreground">Customize every aspect of your avatar with detailed text prompts</p>
+            </div>
+            
+            <div className="glass rounded-2xl p-8 flex flex-col items-center text-center transition-transform hover:scale-105 duration-300">
+              <div className="w-16 h-16 rounded-full bg-avatar-blue/20 flex items-center justify-center mb-4">
+                <Image className="w-8 h-8 text-avatar-blue" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">High Quality</h3>
+              <p className="text-muted-foreground">Get high resolution avatars perfect for social media and profiles</p>
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      {/* Footer */}
+      <footer className="bg-white/50 backdrop-blur-sm py-6 border-t border-border">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-muted-foreground">&copy; {new Date().getFullYear()} AvatarDream. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 };
