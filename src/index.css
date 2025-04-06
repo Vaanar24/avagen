@@ -65,6 +65,21 @@
     }
   }
 
+  @keyframes entrance {
+    0% {
+      transform: scale(0.8) translateY(10px);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-entrance {
+    animation: entrance 0.6s ease-out forwards;
+  }
+
   .animate-shimmer {
     background: linear-gradient(
       90deg,

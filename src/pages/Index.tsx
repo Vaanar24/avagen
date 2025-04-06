@@ -48,7 +48,8 @@ const Index = () => {
                   <img 
                     src={avatar.imageUrl} 
                     alt={`AI-generated avatar: ${avatar.prompt}`}
-                    className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity transform hover:scale-105 duration-500"
+                    className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity transform hover:scale-105 duration-500 animate-entrance"
+                    style={{ animationDelay: `${0.3 + index * 0.15}s` }}
                     onError={(e) => {
                       console.error(`Failed to load image: ${avatar.imageUrl}`);
                       e.currentTarget.src = "/placeholder.svg"; // Fallback to placeholder
@@ -59,6 +60,7 @@ const Index = () => {
                       {avatar.prompt}
                     </p>
                   </div>
+                  <div className="absolute -inset-px border-2 border-transparent hover:border-white/40 transition-all duration-500 rounded-2xl animate-pulse-slow" style={{ animationDelay: `${index * 0.2}s` }}></div>
                 </div>
               ))
             ) : (

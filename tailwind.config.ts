@@ -106,7 +106,15 @@ export default {
 				'spin-slow': {
 					'0%': { transform: 'rotate(0deg)' },
 					'100%': { transform: 'rotate(360deg)' },
-				}
+				},
+                'shimmer': {
+                    '0%': { backgroundPosition: '-100%' },
+                    '100%': { backgroundPosition: '200%' },
+                },
+                'glow': {
+                    '0%, 100%': { boxShadow: '0 0 10px rgba(139, 92, 246, 0.3)' },
+                    '50%': { boxShadow: '0 0 20px rgba(139, 92, 246, 0.6)' },
+                }
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -114,6 +122,8 @@ export default {
 				'pulse-slow': 'pulse-slow 3s infinite ease-in-out',
 				'float': 'float 6s infinite ease-in-out',
 				'spin-slow': 'spin-slow 8s linear infinite',
+                'shimmer': 'shimmer 2s infinite linear',
+                'glow': 'glow 3s infinite ease-in-out',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
