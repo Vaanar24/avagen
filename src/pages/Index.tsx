@@ -43,6 +43,10 @@ const Index = () => {
                   src={avatar.imageUrl} 
                   alt={`AI-generated avatar: ${avatar.prompt}`}
                   className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity"
+                  onError={(e) => {
+                    console.error(`Failed to load image: ${avatar.imageUrl}`);
+                    e.currentTarget.src = "/placeholder.svg"; // Fallback to placeholder
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
                   <p className="text-white text-xs p-2 truncate w-full text-center">
