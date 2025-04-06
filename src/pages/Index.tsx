@@ -1,4 +1,3 @@
-
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -6,14 +5,17 @@ import Navbar from '@/components/NavBar';
 import { Image, User, Sparkles, Zap } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { getRandomExampleAvatars } from '@/utils/exampleAvatars';
+import { toast } from '@/components/ui/use-toast';
 
 const Index = () => {
   const { isAuthenticated } = useAuth();
   const [exampleImages, setExampleImages] = useState<Array<{id: string; imageUrl: string; prompt: string;}>>([]);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   
   useEffect(() => {
     // Get random example avatars when the component mounts
     setExampleImages(getRandomExampleAvatars(4));
+    setImagesLoaded(true);
   }, []);
 
   return (
@@ -34,27 +36,37 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 my-12 max-w-4xl w-full">
-            {exampleImages.map((avatar) => (
-              <div 
-                key={avatar.id} 
-                className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-gradient-to-br from-avatar-purple/80 to-avatar-blue/80 relative group"
-              >
-                <img 
-                  src={avatar.imageUrl} 
-                  alt={`AI-generated avatar: ${avatar.prompt}`}
-                  className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity"
-                  onError={(e) => {
-                    console.error(`Failed to load image: ${avatar.imageUrl}`);
-                    e.currentTarget.src = "/placeholder.svg"; // Fallback to placeholder
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
-                  <p className="text-white text-xs p-2 truncate w-full text-center">
-                    {avatar.prompt}
-                  </p>
+            {imagesLoaded ? (
+              exampleImages.map((avatar) => (
+                <div 
+                  key={avatar.id} 
+                  className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-gradient-to-br from-avatar-purple/80 to-avatar-blue/80 relative group"
+                >
+                  <img 
+                    src={avatar.imageUrl} 
+                    alt={`AI-generated avatar: ${avatar.prompt}`}
+                    className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity"
+                    onError={(e) => {
+                      console.error(`Failed to load image: ${avatar.imageUrl}`);
+                      e.currentTarget.src = "/placeholder.svg"; // Fallback to placeholder
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
+                    <p className="text-white text-xs p-2 truncate w-full text-center">
+                      {avatar.prompt}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              // Loading placeholders
+              Array(4).fill(0).map((_, index) => (
+                <div 
+                  key={`loading-${index}`} 
+                  className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-avatar-purple/30 to-avatar-blue/30 animate-pulse"
+                ></div>
+              ))
+            )}
           </div>
           
           <div className="space-x-4">

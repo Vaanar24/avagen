@@ -173,6 +173,10 @@ const Generator = () => {
                       src={avatar.imageUrl} 
                       alt={avatar.prompt} 
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        console.error(`Failed to load avatar: ${avatar.id}`);
+                        e.currentTarget.src = "/placeholder.svg";
+                      }}
                     />
                   </div>
                 ))}

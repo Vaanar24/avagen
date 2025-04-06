@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Download, ArrowLeft, Clock, MessageSquare } from 'lucide-react';
+import { Download, ArrowLeft, Clock, MessageSquare, Loader2 } from 'lucide-react';
 import Navbar from '@/components/NavBar';
 import { getAvatar } from '@/services/generatorService';
 import { toast } from '@/components/ui/use-toast';
@@ -21,6 +21,7 @@ const Result = () => {
   const { imageId } = useParams<{ imageId: string }>();
   const [avatar, setAvatar] = useState<Avatar | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,6 +46,7 @@ const Result = () => {
         }
         
         setAvatar(fetchedAvatar);
+        setImageError(false);
       } catch (error) {
         console.error('Error fetching avatar:', error);
         toast({
@@ -69,14 +71,37 @@ const Result = () => {
       description: "Your avatar is being downloaded",
     });
     
-    // In a real app, this would trigger a file download
-    // For this demo, we'll just simulate the download experience
-    setTimeout(() => {
+    try {
+      // Create an anchor element and set attributes
+      const link = document.createElement('a');
+      
+      // If the image is a base64 data URL, use it directly
+      if (avatar.imageUrl.startsWith('data:')) {
+        link.href = avatar.imageUrl;
+      } else {
+        // For regular URLs, we need to create a proxy or use the URL directly
+        link.href = avatar.imageUrl;
+      }
+      
+      link.download = `avatar-${avatar.id}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      setTimeout(() => {
+        toast({
+          title: "Download complete",
+          description: "Avatar saved successfully",
+        });
+      }, 1500);
+    } catch (error) {
+      console.error('Error downloading avatar:', error);
       toast({
-        title: "Download complete",
-        description: "Avatar saved successfully",
+        title: "Download failed",
+        description: "There was a problem downloading the avatar",
+        variant: "destructive",
       });
-    }, 1500);
+    }
   };
 
   const handleBack = () => {
@@ -88,7 +113,10 @@ const Result = () => {
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <div className="flex flex-col items-center">
+            <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
+            <p className="text-muted-foreground">Loading avatar...</p>
+          </div>
         </div>
       </div>
     );
@@ -120,11 +148,25 @@ const Result = () => {
           <div className="grid md:grid-cols-2 gap-8">
             <div className="order-2 md:order-1">
               <Card className="glass border-0 overflow-hidden">
-                <img 
-                  src={avatar.imageUrl} 
-                  alt={avatar.prompt}
-                  className="w-full aspect-square object-cover"
-                />
+                {imageError ? (
+                  <div className="w-full aspect-square flex items-center justify-center bg-muted/30">
+                    <div className="flex flex-col items-center">
+                      <Image className="h-16 w-16 text-muted mb-4" />
+                      <p className="text-muted">Image could not be loaded</p>
+                    </div>
+                  </div>
+                ) : (
+                  <img 
+                    src={avatar.imageUrl} 
+                    alt={avatar.prompt}
+                    className="w-full aspect-square object-cover"
+                    onError={(e) => {
+                      console.error(`Failed to load result image: ${avatar.id}`);
+                      e.currentTarget.src = "/placeholder.svg";
+                      setImageError(true);
+                    }}
+                  />
+                )}
               </Card>
               
               <div className="mt-6 flex justify-between">
@@ -140,6 +182,7 @@ const Result = () => {
                 <Button 
                   className="gap-2 bg-gradient-to-r from-avatar-purple to-avatar-blue flex-1 ml-2"
                   onClick={handleDownload}
+                  disabled={imageError}
                 >
                   <Download className="h-4 w-4" />
                   Download

@@ -1,127 +1,118 @@
 
-// Collection of pre-generated avatars to display on the index page
-// These will be randomly selected and displayed
-
-export interface ExampleAvatar {
+interface ExampleAvatar {
   id: string;
   imageUrl: string;
   prompt: string;
 }
 
-// Array of example avatars pre-generated from the model
-export const exampleAvatars: ExampleAvatar[] = [
+// Array of example avatars with base64 or reliable placeholder URLs
+const exampleAvatars: ExampleAvatar[] = [
   {
     id: "example1",
-    imageUrl: "https://storage.googleapis.com/pai-images/ae74b3002bfe4b538493ca7aedb6a300.jpeg",
-    prompt: "Cyberpunk female character with neon blue hair and glowing facial implants"
+    imageUrl: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+    prompt: "Professional portrait with blue background"
   },
   {
     id: "example2",
-    imageUrl: "https://storage.googleapis.com/pai-images/4c7db9edc1ee4d11b3074f9e0c49eebf.jpeg", 
-    prompt: "Fantasy warrior with ornate armor and glowing runes"
+    imageUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1180&q=80",
+    prompt: "Creative avatar with minimalist design"
   },
   {
     id: "example3",
-    imageUrl: "https://storage.googleapis.com/pai-images/eab973d63161487c98c278d52bfb47a0.jpeg",
-    prompt: "Ethereal elf with flowing white hair and nature elements"
+    imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+    prompt: "Bright smile with natural lighting"
   },
   {
     id: "example4",
-    imageUrl: "https://storage.googleapis.com/pai-images/533122b8fe69471e99b339369728a629.jpeg",
-    prompt: "Steampunk engineer with brass goggles and mechanical arm"
+    imageUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1061&q=80",
+    prompt: "Modern professional with gradient background"
   },
   {
     id: "example5",
-    imageUrl: "https://storage.googleapis.com/pai-images/3c31a5eabc884dd1a582cb888fdd9af9.jpeg",
-    prompt: "Futuristic astronaut with holographic visor and space background"
+    imageUrl: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1180&q=80",
+    prompt: "Digital art style with vibrant colors"
   },
   {
     id: "example6",
-    imageUrl: "https://storage.googleapis.com/pai-images/bab9991425584ba883a3b009be4e50b1.jpeg",
-    prompt: "Post-apocalyptic survivor with weathered gear and tribal markings"
+    imageUrl: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+    prompt: "Friendly smile with soft lighting"
   },
   {
     id: "example7",
-    imageUrl: "https://storage.googleapis.com/pai-images/9f4270ca977a488a9df4c222e4324d57.jpeg",
-    prompt: "Mystic oracle with glowing eyes and cosmic patterns"
+    imageUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+    prompt: "Outdoor portrait with natural background"
   },
   {
     id: "example8",
-    imageUrl: "https://storage.googleapis.com/pai-images/b7c7e283e4684192a5199a11ed9dcf1d.jpeg",
-    prompt: "Neo-samurai with energy blade and modern tech armor"
+    imageUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+    prompt: "Serious professional with glasses"
   },
   {
     id: "example9",
-    imageUrl: "https://storage.googleapis.com/pai-images/98548921f95f445c829bcad1d0ea3c6a.jpeg",
-    prompt: "Digital nomad with augmented reality glasses and tech implants"
+    imageUrl: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80",
+    prompt: "Relaxed casual style with good lighting"
   },
   {
     id: "example10",
-    imageUrl: "https://storage.googleapis.com/pai-images/46a633290ec24b3ea739aeda679ff876.jpeg",
-    prompt: "Arctic explorer with thermal suit and ice-blue eyes"
+    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=688&q=80",
+    prompt: "Business professional with confident pose"
   },
   {
     id: "example11",
-    imageUrl: "https://storage.googleapis.com/pai-images/37409d1880864d40beff9765e0bb3006.jpeg",
-    prompt: "Desert nomad with sand-resistant gear and ritual face paint"
+    imageUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+    prompt: "Urban entrepreneur style with city background"
   },
   {
     id: "example12",
-    imageUrl: "https://storage.googleapis.com/pai-images/5d4fc8fa25f5413a83b04c11a52378bb.jpeg",
-    prompt: "Retro-futuristic robot pilot with vintage helmet design"
+    imageUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+    prompt: "Classic portrait with neutral expression"
   },
   {
     id: "example13",
-    imageUrl: "https://storage.googleapis.com/pai-images/8f4485dce60c4e27ac6a327673daccb3.jpeg",
-    prompt: "Underwater explorer with bioluminescent features and gill implants"
+    imageUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=688&q=80",
+    prompt: "Artistic portrait with textured background"
   },
   {
     id: "example14",
-    imageUrl: "https://storage.googleapis.com/pai-images/6daf97779878424ebf709ab74c80aaa7.jpeg",
-    prompt: "Neon punk DJ with sound-reactive holographic hair"
+    imageUrl: "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+    prompt: "Modern tech professional with gradient lighting"
   },
   {
     id: "example15",
-    imageUrl: "https://storage.googleapis.com/pai-images/f8b548c3d055484a808113c1c9556773.jpeg",
-    prompt: "Celestial being with star-speckled skin and cosmic aura"
+    imageUrl: "https://images.unsplash.com/photo-1614283233556-f35b0c801ef1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+    prompt: "Fashionable portrait with creative lighting"
   },
   {
     id: "example16",
-    imageUrl: "https://storage.googleapis.com/pai-images/e3a67a2c4f7f454f8a9081091aeb32f0.jpeg",
-    prompt: "Bio-tech engineer with plant-integrated cybernetics"
+    imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+    prompt: "Thoughtful expression with plain background"
   },
   {
     id: "example17",
-    imageUrl: "https://storage.googleapis.com/pai-images/fd8d1fd5dd4a45ef90b014068744f567.jpeg",
-    prompt: "Chrome-plated android with minimalist geometric design"
+    imageUrl: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+    prompt: "Casual style with urban setting"
   },
   {
     id: "example18",
-    imageUrl: "https://storage.googleapis.com/pai-images/fa2c21c7ed294d3fb7a13e077b56eebc.jpeg",
-    prompt: "Modern ninja with urban camouflage and tech-enhanced weapons"
+    imageUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80",
+    prompt: "Fashion portrait with dramatic lighting"
   },
   {
     id: "example19",
-    imageUrl: "https://storage.googleapis.com/pai-images/9388597a60634158832e858a0d91ae5c.jpeg",
-    prompt: "Time traveler with era-mixing fashion elements and chronometer gadgets"
+    imageUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+    prompt: "Black and white professional portrait"
   },
   {
     id: "example20",
-    imageUrl: "https://storage.googleapis.com/pai-images/a6fbc2f3b39444d3908e94bb3625836c.jpeg",
-    prompt: "Virtual reality gamer with full-body haptic suit and neon accents"
-  },
+    imageUrl: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+    prompt: "Sunlit portrait with natural smile"
+  }
 ];
 
-/**
- * Get a specified number of random example avatars
- * @param count Number of avatars to return
- * @returns Array of randomly selected example avatars
- */
-export function getRandomExampleAvatars(count: number = 4): ExampleAvatar[] {
-  // Create a copy of the array to avoid modifying the original
+// Function to get a random subset of example avatars
+export const getRandomExampleAvatars = (count: number): ExampleAvatar[] => {
+  // Shuffle the array using Fisher-Yates algorithm
   const shuffled = [...exampleAvatars];
-  
-  // Fisher-Yates shuffle algorithm
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
@@ -129,4 +120,4 @@ export function getRandomExampleAvatars(count: number = 4): ExampleAvatar[] {
   
   // Return the first 'count' elements
   return shuffled.slice(0, count);
-}
+};
