@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Download, ArrowLeft, Clock, MessageSquare, Loader2 } from 'lucide-react';
+import { Download, ArrowLeft, Clock, MessageSquare, Loader2, ImageIcon } from 'lucide-react';
 import Navbar from '@/components/NavBar';
 import { getAvatar } from '@/services/generatorService';
 import { toast } from '@/components/ui/use-toast';
@@ -151,7 +151,7 @@ const Result = () => {
                 {imageError ? (
                   <div className="w-full aspect-square flex items-center justify-center bg-muted/30">
                     <div className="flex flex-col items-center">
-                      <Image className="h-16 w-16 text-muted mb-4" />
+                      <ImageIcon className="h-16 w-16 text-muted mb-4" />
                       <p className="text-muted">Image could not be loaded</p>
                     </div>
                   </div>
