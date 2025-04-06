@@ -4,9 +4,17 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/NavBar';
 import { Image, User, Sparkles, Zap } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { getRandomExampleAvatars } from '@/utils/exampleAvatars';
 
 const Index = () => {
   const { isAuthenticated } = useAuth();
+  const [exampleImages, setExampleImages] = useState<Array<{id: string; imageUrl: string; prompt: string;}>>([]);
+  
+  useEffect(() => {
+    // Get random example avatars when the component mounts
+    setExampleImages(getRandomExampleAvatars(4));
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -26,16 +34,21 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 my-12 max-w-4xl w-full">
-            {[1, 2, 3, 4].map((item) => (
+            {exampleImages.map((avatar) => (
               <div 
-                key={item} 
-                className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-gradient-to-br from-avatar-purple/80 to-avatar-blue/80"
+                key={avatar.id} 
+                className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-gradient-to-br from-avatar-purple/80 to-avatar-blue/80 relative group"
               >
                 <img 
-                  src={`https://via.placeholder.com/300x300/8B5CF6/FFFFFF?text=Example+${item}`} 
-                  alt={`Avatar example ${item}`}
-                  className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+                  src={avatar.imageUrl} 
+                  alt={`AI-generated avatar: ${avatar.prompt}`}
+                  className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
+                  <p className="text-white text-xs p-2 truncate w-full text-center">
+                    {avatar.prompt}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
