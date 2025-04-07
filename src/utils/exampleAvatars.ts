@@ -55,9 +55,5 @@ export const getRandomExampleAvatars = (count: number) => {
   const shuffled = [...exampleAvatars].sort(() => 0.5 - Math.random());
   const selected = shuffled.slice(0, count);
   
-  // Add 'animated' to each prompt
-  return selected.map(avatar => ({
-    ...avatar,
-    prompt: `${avatar.prompt}, animated`
-  }));
+  return selected;
 };

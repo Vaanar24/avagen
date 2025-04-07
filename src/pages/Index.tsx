@@ -16,7 +16,9 @@ const Index = () => {
   useEffect(() => {
     // Get random example avatars when the component mounts
     // Force new random selection on each render 
-    setExampleImages(getRandomExampleAvatars(4));
+    const images = getRandomExampleAvatars(4);
+    setExampleImages(images);
+    console.log("Example images loaded:", images); // Debug log
     setImagesLoaded(true);
   }, []);
 
@@ -48,7 +50,7 @@ const Index = () => {
                   <div className="absolute inset-0 bg-gradient-to-br from-avatar-purple/30 to-avatar-blue/30 animate-float" style={{ animationDelay: `${index * 0.3}s` }}></div>
                   <img 
                     src={avatar.imageUrl} 
-                    alt={`AI-generated avatar: ${avatar.prompt}`}
+                    alt={`AI-generated avatar: ${avatar.prompt}, animated`}
                     className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity transform hover:scale-105 duration-500 animate-entrance"
                     style={{ animationDelay: `${0.3 + index * 0.15}s` }}
                     onError={(e) => {
@@ -58,7 +60,7 @@ const Index = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
                     <p className="text-white text-xs p-2 truncate w-full text-center">
-                      {avatar.prompt}
+                      {avatar.prompt}, animated
                     </p>
                   </div>
                   <div className="absolute -inset-px border-2 border-transparent hover:border-white/40 transition-all duration-500 rounded-2xl animate-pulse-slow" style={{ animationDelay: `${index * 0.2}s` }}></div>
