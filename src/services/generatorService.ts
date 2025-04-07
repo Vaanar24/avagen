@@ -1,3 +1,4 @@
+
 import { toast } from '@/components/ui/use-toast';
 import { supabase } from "@/integrations/supabase/client";
 import { Database } from "@/integrations/supabase/types";
@@ -33,7 +34,7 @@ export const generateAvatar = async ({ prompt, userId }: GenerateParams): Promis
     // Start timing the generation process
     const startTime = new Date().getTime();
     
-    // Enhance prompt for better results - add 'animated' to ensure consistent animation style
+    // Enhance prompt for better results
     const enhancedPrompt = `${prompt}, animated, high quality, detailed`;
     
     // Call Hugging Face API for real image generation
