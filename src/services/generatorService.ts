@@ -18,11 +18,11 @@ interface GenerateParams {
 }
 
 const PLACEHOLDER_IMAGES = [
-  'https://via.placeholder.com/512x512/8B5CF6/FFFFFF?text=AI+Avatar+1',
-  'https://via.placeholder.com/512x512/6366F1/FFFFFF?text=AI+Avatar+2',
-  'https://via.placeholder.com/512x512/3B82F6/FFFFFF?text=AI+Avatar+3',
-  'https://via.placeholder.com/512x512/06B6D4/FFFFFF?text=AI+Avatar+4',
-  'https://via.placeholder.com/512x512/8B5CF6/FFFFFF?text=AI+Avatar+5',
+  '/placeholder.svg',
+  '/placeholder.svg',
+  '/placeholder.svg',
+  '/placeholder.svg',
+  '/placeholder.svg',
 ];
 
 // Hugging Face API constants

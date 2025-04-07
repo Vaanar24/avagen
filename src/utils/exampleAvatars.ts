@@ -5,42 +5,42 @@
 const exampleAvatars = [
   { 
     id: 'example1', 
-    imageUrl: 'https://via.placeholder.com/512x512/8B5CF6/FFFFFF?text=AI+Avatar+1', 
+    imageUrl: '/placeholder.svg', 
     prompt: 'a professional profile picture of a person with short hair and glasses'
   },
   { 
     id: 'example2', 
-    imageUrl: 'https://via.placeholder.com/512x512/6366F1/FFFFFF?text=AI+Avatar+2', 
+    imageUrl: '/placeholder.svg', 
     prompt: 'cyberpunk character with neon lights and futuristic background'
   },
   { 
     id: 'example3', 
-    imageUrl: 'https://via.placeholder.com/512x512/3B82F6/FFFFFF?text=AI+Avatar+3', 
+    imageUrl: '/placeholder.svg', 
     prompt: 'fantasy elf character with long hair and pointed ears'
   },
   { 
     id: 'example4', 
-    imageUrl: 'https://via.placeholder.com/512x512/06B6D4/FFFFFF?text=AI+Avatar+4', 
+    imageUrl: '/placeholder.svg', 
     prompt: 'steampunk portrait with goggles and victorian clothing'
   },
   { 
     id: 'example5', 
-    imageUrl: 'https://via.placeholder.com/512x512/8B5CF6/FFFFFF?text=AI+Avatar+5', 
+    imageUrl: '/placeholder.svg', 
     prompt: 'sci-fi astronaut with helmet reflecting space'
   },
   { 
     id: 'example6', 
-    imageUrl: 'https://via.placeholder.com/512x512/6366F1/FFFFFF?text=AI+Avatar+6', 
+    imageUrl: '/placeholder.svg', 
     prompt: 'minimalist portrait with abstract geometric background'
   },
   { 
     id: 'example7', 
-    imageUrl: 'https://via.placeholder.com/512x512/3B82F6/FFFFFF?text=AI+Avatar+7', 
+    imageUrl: '/placeholder.svg', 
     prompt: 'watercolor style portrait with bright colors'
   },
   { 
     id: 'example8', 
-    imageUrl: 'https://via.placeholder.com/512x512/06B6D4/FFFFFF?text=AI+Avatar+8', 
+    imageUrl: '/placeholder.svg', 
     prompt: 'vintage photograph style portrait with sepia tones'
   },
 ];
