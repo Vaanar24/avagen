@@ -15,6 +15,7 @@ const Index = () => {
   
   useEffect(() => {
     // Get random example avatars when the component mounts
+    // Force new random selection on each render 
     setExampleImages(getRandomExampleAvatars(4));
     setImagesLoaded(true);
   }, []);
@@ -40,7 +41,7 @@ const Index = () => {
             {imagesLoaded ? (
               exampleImages.map((avatar, index) => (
                 <div 
-                  key={avatar.id} 
+                  key={`${avatar.id}-${index}`} 
                   className="aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-gradient-to-br from-avatar-purple/80 to-avatar-blue/80 relative group animate-fade-in"
                   style={{ animationDelay: `${index * 0.15}s` }}
                 >
