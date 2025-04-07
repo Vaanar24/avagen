@@ -1,4 +1,3 @@
-
 import { toast } from '@/components/ui/use-toast';
 import { supabase } from "@/integrations/supabase/client";
 import { Database } from "@/integrations/supabase/types";
@@ -18,11 +17,11 @@ interface GenerateParams {
 }
 
 const PLACEHOLDER_IMAGES = [
-  '/placeholder.svg',
-  '/placeholder.svg',
-  '/placeholder.svg',
-  '/placeholder.svg',
-  '/placeholder.svg',
+  'https://via.placeholder.com/512x512/8B5CF6/FFFFFF?text=AI+Avatar+1',
+  'https://via.placeholder.com/512x512/6366F1/FFFFFF?text=AI+Avatar+2',
+  'https://via.placeholder.com/512x512/3B82F6/FFFFFF?text=AI+Avatar+3',
+  'https://via.placeholder.com/512x512/06B6D4/FFFFFF?text=AI+Avatar+4',
+  'https://via.placeholder.com/512x512/8B5CF6/FFFFFF?text=AI+Avatar+5',
 ];
 
 // Hugging Face API constants
@@ -34,10 +33,8 @@ export const generateAvatar = async ({ prompt, userId }: GenerateParams): Promis
     // Start timing the generation process
     const startTime = new Date().getTime();
     
-    // Ensure prompt includes 'animated' for consistent animation style
-    const enhancedPrompt = prompt.includes('animated') 
-      ? `${prompt}, high quality, detailed` 
-      : `${prompt}, animated, high quality, detailed`;
+    // Enhance prompt for better results - add 'animated' to ensure consistent animation style
+    const enhancedPrompt = `${prompt}, animated, high quality, detailed`;
     
     // Call Hugging Face API for real image generation
     let imageUrl = '';
